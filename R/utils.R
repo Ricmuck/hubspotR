@@ -32,10 +32,16 @@ get_path_url <- function(path) {
 
   # auth
   if (auth$auth == "key") {
-    query$hapikey <- auth$value
-    res <- httr::GET(get_path_url(path),
+
+    key <- auth$value
+
+    headers = c(
+      'Authorization' = paste0('Bearer ',key),
+      'Content-Type' = 'application/json'
+    )
+    res <- httr::GET(get_path_url(path),add_headers(headers),
       query = query,
-      httr::user_agent("hubspot R package by Locke Data")
+      httr::user_agent("hubspot R package by Grips")
     )
   } else {
     token <- readRDS(auth$value)
@@ -44,7 +50,7 @@ get_path_url <- function(path) {
 
     res <- httr::GET(get_path_url(path),
       query = query,
-      httr::config(httr::user_agent("hubspot R package by Locke Data"),
+      httr::config(httr::user_agent("hubspot R package by Grips"),
         token = token
       )
     )
